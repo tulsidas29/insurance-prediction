@@ -4,7 +4,7 @@ import joblib
 
 model = joblib.load("insurance_model.pkl")
 
-st.title("Medical Insurance Cost Prediction")
+st.title("Insurance Cost Prediction")
 
 age = st.number_input("Age", 18, 100)
 
@@ -62,49 +62,25 @@ else:
     bmi_category = 3
 
 input_data = pd.DataFrame({
-    'age': [age],
-    'sex': [sex],
-    'bmi': [bmi],
-    'children': [children],
-    'smoker': [smoker],
-    'region_northeast': [region_northeast],
-    'region_northwest': [region_northwest],
-    'region_southeast': [region_southeast],
-    'region_southwest': [region_southwest],
-    'bmi_category': [bmi_category]
+    "age": [age],
+    "sex": [sex],
+    "bmi": [bmi],
+    "children": [children],
+    "smoker": [smoker],
+    "region_northeast": [region_northeast],
+    "region_northwest": [region_northwest],
+    "region_southeast": [region_southeast],
+    "region_southwest": [region_southwest],
+    "bmi_category": [bmi_category]
 })
 
-if st.button("Predict Insurance Cost"):
+if st.button("Predict"):
 
     prediction = model.predict(input_data)
 
     st.success(
         f"Estimated Insurance Cost: ${prediction[0]:,.2f}"
-    )                                                                                                                                                                    region_southeast = 1 if region == "southeast" else 0
-                                                                                                                                                                    region_southwest = 1 if region == "southwest" else 0
-
-                                                                                                                                                                    # BMI Category
-                                                                                                                                                                    if bmi < 18.5:
-                                                                                                                                                                        bmi_category = 0
-
-                                                                                                                                                                        elif bmi < 25:
-                                                                                                                                                                            bmi_category = 1
-
-                                                                                                                                                                            elif bmi < 30:
-                                                                                                                                                                                bmi_category = 2
-
-                                                                                                                                                                                else:
-                                                                                                                                                                                    bmi_category = 3
-
-                                                                                                                                                                                    # Input DataFrame
-                                                                                                                                                                                    input_data = pd.DataFrame({
-                                                                                                                                                                                        'age': [age],
-                                                                                                                                                                                            'sex': [sex],
-                                                                                                                                                                                                'bmi': [bmi],
-                                                                                                                                                                                                    'children': [children],
-                                                                                                                                                                                                        'smoker': [smoker],
-                                                                                                                                                                                                            'region_northeast': [region_northeast],
-                                                                                                                                                                                                                'region_northwest': [region_northwest],
+)                                                                                                                                                                                                                'region_northwest': [region_northwest],
                                                                                                                                                                                                                     'region_southeast': [region_southeast],
                                                                                                                                                                                                                         'region_southwest': [region_southwest],
                                                                                                                                                                                                                             'bmi_category': [bmi_category]
