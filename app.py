@@ -1,110 +1,86 @@
-
 import streamlit as st
 import pandas as pd
 import joblib
 
-st.set_page_config(
-    page_title="Insurance Prediction",
-        page_icon="💎",
-            layout="centered"
-            )
+model = joblib.load("insurance_model.pkl")
 
-            st.markdown("""
-            <style>
+st.title("Medical Insurance Cost Prediction")
 
-            .main {
-                background-color: #0f172a;
-                }
+age = st.number_input("Age", 18, 100)
 
-                h1 {
-                    color: white;
-                        text-align: center;
-                            font-size: 40px;
-                            }
+sex = st.selectbox(
+    "Gender",
+    ["Male", "Female"]
+)
 
-                            .stButton > button {
-                                width: 100%;
-                                    background: linear-gradient(to right, #7c3aed, #2563eb);
-                                        color: white;
-                                            border-radius: 12px;
-                                                height: 50px;
-                                                    font-size: 18px;
-                                                        border: none;
-                                                        }
+bmi = st.number_input(
+    "BMI",
+    10.0,
+    50.0
+)
 
-                                                        .stButton > button:hover {
-                                                            background: linear-gradient(to right, #2563eb, #7c3aed);
-                                                                color: white;
-                                                                }
+children = st.number_input(
+    "Children",
+    0,
+    10
+)
 
-                                                                .block-container {
-                                                                    padding-top: 2rem;
-                                                                    }
+smoker = st.selectbox(
+    "Smoker",
+    ["No", "Yes"]
+)
 
-                                                                    [data-testid="stHeader"] {
-                                                                        background: transparent;
-                                                                        }
+region = st.selectbox(
+    "Region",
+    [
+        "northwest",
+        "northeast",
+        "southwest",
+        "southeast"
+    ]
+)
 
-                                                                        .stNumberInput label,
-                                                                        .stSelectbox label {
-                                                                            color: white !important;
-                                                                                font-weight: bold;
-                                                                                }
+sex = 0 if sex == "Male" else 1
 
-                                                                                </style>
-                                                                                """, unsafe_allow_html=True)
+smoker = 1 if smoker == "Yes" else 0
 
-                                                                                # Load Model
-                                                                                model = joblib.load("insurance_model.pkl")
+region_northeast = 1 if region == "northeast" else 0
+region_northwest = 1 if region == "northwest" else 0
+region_southeast = 1 if region == "southeast" else 0
+region_southwest = 1 if region == "southwest" else 0
 
-                                                                                # Title
-                                                                                st.title("Medical Insurance Cost Prediction")
+if bmi < 18.5:
+    bmi_category = 0
 
-                                                                                st.write("Enter your details below")
+elif bmi < 25:
+    bmi_category = 1
 
-                                                                                # Inputs
-                                                                                age = st.number_input("Age", 18, 100)
+elif bmi < 30:
+    bmi_category = 2
 
-                                                                                sex = st.selectbox(
-                                                                                    "Gender",
-                                                                                        ["Male", "Female"]
-                                                                                        )
+else:
+    bmi_category = 3
 
-                                                                                        bmi = st.number_input(
-                                                                                            "BMI",
-                                                                                                10.0,
-                                                                                                    50.0
-                                                                                                    )
+input_data = pd.DataFrame({
+    'age': [age],
+    'sex': [sex],
+    'bmi': [bmi],
+    'children': [children],
+    'smoker': [smoker],
+    'region_northeast': [region_northeast],
+    'region_northwest': [region_northwest],
+    'region_southeast': [region_southeast],
+    'region_southwest': [region_southwest],
+    'bmi_category': [bmi_category]
+})
 
-                                                                                                    children = st.number_input(
-                                                                                                        "Children",
-                                                                                                            0,
-                                                                                                                10
-                                                                                                                )
+if st.button("Predict Insurance Cost"):
 
-                                                                                                                smoker = st.selectbox(
-                                                                                                                    "Smoker",
-                                                                                                                        ["No", "Yes"]
-                                                                                                                        )
+    prediction = model.predict(input_data)
 
-                                                                                                                        region = st.selectbox(
-                                                                                                                            "Region",
-                                                                                                                                [
-                                                                                                                                        "northwest",
-                                                                                                                                                "northeast",
-                                                                                                                                                        "southwest",
-                                                                                                                                                                "southeast"
-                                                                                                                                                                    ]
-                                                                                                                                                                    )
-
-                                                                                                                                                                    # Encoding
-                                                                                                                                                                    sex = 0 if sex == "Male" else 1
-
-                                                                                                                                                                    smoker = 1 if smoker == "Yes" else 0
-
-                                                                                                                                                                    region_northeast = 1 if region == "northeast" else 0
-                                                                                                                                                                    region_northwest = 1 if region == "northwest" else 0
-                                                                                                                                                                    region_southeast = 1 if region == "southeast" else 0
+    st.success(
+        f"Estimated Insurance Cost: ${prediction[0]:,.2f}"
+    )                                                                                                                                                                    region_southeast = 1 if region == "southeast" else 0
                                                                                                                                                                     region_southwest = 1 if region == "southwest" else 0
 
                                                                                                                                                                     # BMI Category
